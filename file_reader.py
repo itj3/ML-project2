@@ -2,8 +2,9 @@ import csv
 import datetime
 
 def read(file_name):
-	return_list = []
+	return_dict = {}
 	with open(file_name, 'rb') as csv_file:
+		count = []
 		spamreader = csv.reader(csv_file, delimiter=' ', quotechar='|')
 		for row in spamreader:
 			#put row into a list
@@ -21,5 +22,9 @@ def read(file_name):
 			minute = int(time_list[1])
 			second = int(time_list[2])
 			dt     = datetime.datetime(year, month, day, hour, minute, second)
-			return_list.append([name, dt, row_list[3]])
-	return return_list
+			#add new value to the dictionary
+			if name not in count:
+				return_dict[name] = []
+				count.append(name)
+			return_dict[name].append([dt, row_list[3]])
+	return return_dict
