@@ -3,6 +3,22 @@ import csv
 # def bounds(startTime, endTime):
 startTime= '2200'
 endTime = '0630'
+webster = {}
+with open('ArbTempDataset.csv', 'rb') as csvTemp:
+    stuff = csv.reader(csvTemp, delimiter=',')
+    for row in stuff:
+        try:
+            temp = str(row[3:4]).split("'")
+            keye = str(row[1:3]).split("[")
+            keye = keye[1].split("]")
+            keye = keye[0].split("'")
+            x = len(keye[3])-7
+            keye = keye[1]+" "+keye[3][0:x]
+            # print keye
+            webster[keye] = float(temp[1])
+        except ValueError:
+            pass
+# print webster['4/16/2015 5:40']
 with open('AdelMathDeployment.csv', 'rb') as csvFile:
     content = csv.reader(csvFile, delimiter=',')
     night = open('night.csv', 'wb')
@@ -27,6 +43,16 @@ with open('AdelMathDeployment.csv', 'rb') as csvFile:
                     night.write("%s," % row[3])
                     night.write("%s," % row[4])
                     night.write("%s," % row[6])
+                    try:
+                        keyes = str(row[3:5]).split("]")
+                        keyes = keyes[0].split("[")
+                        keyes = keyes[1]
+                        keyes = keyes.split("'")
+                        x = len(keyes[3])-7
+                        keyes = keyes[1] + " " + keyes[3][0:x]
+                        night.write("%s," % webster[keyes])
+                    except KeyError:
+                        night.write("n/a,")
                     # night.write(str(rowNum))
                     night.write('\n')
             else:
@@ -36,6 +62,16 @@ with open('AdelMathDeployment.csv', 'rb') as csvFile:
                     night.write("%s," % row[3])
                     night.write("%s," % row[4])
                     night.write("%s," % row[6])
+                    try:
+                        keyes = str(row[3:5]).split("]")
+                        keyes = keyes[0].split("[")
+                        keyes = keyes[1]
+                        keyes = keyes.split("'")
+                        x = len(keyes[3])-7
+                        keyes = keyes[1] + " " + keyes[3][0:x]
+                        night.write("%s," % webster[keyes])
+                    except KeyError:
+                        night.write("n/a,")
                     # night.write(str(rowNum))
                     night.write('\n')
         except ValueError:
