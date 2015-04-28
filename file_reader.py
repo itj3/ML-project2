@@ -26,5 +26,5 @@ def read(file_name):
 			if name not in count:
 				return_dict[name] = []
 				count.append(name)
-			return_dict[name].append([dt, row_list[3]])
+			return_dict[name].append([dt, row_list[3], row_list[4]])
 	return return_dict
