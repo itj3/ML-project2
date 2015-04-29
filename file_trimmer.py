@@ -2,7 +2,7 @@ import csv
 
 # def bounds(startTime, endTime):
 startTime= '2200'
-endTime = '0630'
+endTime = '0800'
 webster = {}
 with open('ArbTempDataset.csv', 'rb') as csvTemp:
     stuff = csv.reader(csvTemp, delimiter=',')
@@ -39,10 +39,6 @@ with open('AdelMathDeployment.csv', 'rb') as csvFile:
             if endTime < startTime:
                 switch = (x>=startTime or x <=endTime)
                 if switch:
-                    night.write("%s," % row[0])
-                    night.write("%s," % row[3])
-                    night.write("%s," % row[4])
-                    night.write("%s," % row[6])
                     try:
                         keyes = str(row[3:5]).split("]")
                         keyes = keyes[0].split("[")
@@ -50,18 +46,19 @@ with open('AdelMathDeployment.csv', 'rb') as csvFile:
                         keyes = keyes.split("'")
                         x = len(keyes[3])-7
                         keyes = keyes[1] + " " + keyes[3][0:x]
-                        night.write("%s," % webster[keyes])
+                        datTime = webster[keyes];
+                        night.write("%s," % row[0])
+                        night.write("%s," % row[3])
+                        night.write("%s," % row[4])
+                        night.write("%s," % row[6])
+                        night.write("%s," % datTime)
+                        # night.write(str(rowNum))
+                        night.write('\n')
                     except KeyError:
-                        night.write("n/a,")
-                    # night.write(str(rowNum))
-                    night.write('\n')
+                        pass
             else:
                 switch = (x>=startTime and x <=endTime)
                 if switch:
-                    night.write("%s," % row[0])
-                    night.write("%s," % row[3])
-                    night.write("%s," % row[4])
-                    night.write("%s," % row[6])
                     try:
                         keyes = str(row[3:5]).split("]")
                         keyes = keyes[0].split("[")
@@ -69,10 +66,16 @@ with open('AdelMathDeployment.csv', 'rb') as csvFile:
                         keyes = keyes.split("'")
                         x = len(keyes[3])-7
                         keyes = keyes[1] + " " + keyes[3][0:x]
-                        night.write("%s," % webster[keyes])
+                        datTime = webster[keyes]
+
+                        night.write("%s," % row[0])
+                        night.write("%s," % row[3])
+                        night.write("%s," % row[4])
+                        night.write("%s," % row[6])
+                        night.write("%s," % datTime)
+                        # night.write(str(rowNum))
+                        night.write('\n')
                     except KeyError:
-                        night.write("n/a,")
-                    # night.write(str(rowNum))
-                    night.write('\n')
+                        pass
         except ValueError:
             pass
