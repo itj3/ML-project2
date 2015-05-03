@@ -4,7 +4,7 @@ import csv
 startTime= '2200'
 endTime = '0800'
 webster = {}
-with open('ArbTempDataset.csv', 'rb') as csvTemp:
+with open('ArbTempDataset.csv', 'r') as csvTemp:
     stuff = csv.reader(csvTemp, delimiter=',')
     for row in stuff:
         try:
@@ -19,7 +19,7 @@ with open('ArbTempDataset.csv', 'rb') as csvTemp:
         except ValueError:
             pass
 # print webster['4/16/2015 5:40']
-with open('AdelMathDeployment.csv', 'rb') as csvFile:
+with open('AdelMathDeployment.csv', 'r') as csvFile:
     content = csv.reader(csvFile, delimiter=',')
     night = open('night.csv', 'wb')
     switch = False
