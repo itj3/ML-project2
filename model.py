@@ -71,4 +71,21 @@ def infer_vars(room):
     else:
         return None
 
+def all_tau(room):
+    dt = 10
+    # list to store all calculated capacitance for a particular room
+    all_tau = []
+    time = []
+    dates = []
+
+    for i in range(len(room.temps) - 1):
+        all_tau.append(get_tau(
+            dt,
+            room.temps[i + 1][1] - room.temps[i][1],
+            room.temps[i][1],
+            room.temps[i][2]
+        ))
+        dates.append(room.temps[i][0])
+
+    return  [all_tau,dates]
 
