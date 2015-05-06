@@ -48,5 +48,5 @@ def plot_model(room_num, time, calculated, actual):
     p.legend([model, measured], ['Model', 'Measured'])
     p.xlabel('Time elapsed (s)')
     p.ylabel('Heat (T(t +dt))')
-    p.title('Heat over Time for sensor ' + room_num)
+    p.title('Temperature Over Time For Room Containing Sensor ' + room_num)
     p.savefig('plot%s.png' % room_num)
