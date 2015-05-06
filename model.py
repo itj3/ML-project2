@@ -1,12 +1,12 @@
 # Module containing functions related to our temperature model
 # Function names included here for control-f
 # update_heat(...) - updates the temperature of a given room, as per equation provided.
-# get_capacitance(...) - calculates the capacitance, derived from the equation provided.
-# get_resistance(...) - calculates the resistance, derived from the equation provided.
+# get_tau(...) - calculates tau, the product of capacitance and resistance
+# clean_data(...) - removes tau values <= 0
 # is_stable(...) - determines whether or not the model is stable according to delta < capacitance * resistance
 
 
-def update_heat(delta_t, tau, epsilon, inside_temp, outside_temp):
+def update_heat(delta_t, tau, inside_temp, outside_temp):
     """
     updates the temperature of a given room, as per equation provided
     @param delta_t: the time interval or time step for updating heat
@@ -16,8 +16,7 @@ def update_heat(delta_t, tau, epsilon, inside_temp, outside_temp):
     @param outside_temp: The outside temperature at time t (Te(t) in equation)
     @return: the updated heat of the room (Th(t + delta) in equation)
     """
-
-    return inside_temp + epsilon + (delta_t * -(inside_temp - outside_temp)) / tau
+    return inside_temp + (delta_t * -(inside_temp - outside_temp)) / tau
 
 
 def get_tau(delta_t, delta_heat, inside_temp, outside_temp):
@@ -29,7 +28,14 @@ def get_tau(delta_t, delta_heat, inside_temp, outside_temp):
     @param outside_temp: The outside temperature at time t (Te(t) in equation)
     @return: tau
     """
-    return -(delta_t * (inside_temp - outside_temp)) / (delta_heat - inside_temp)
+    # calculate the denominator
+    denom = delta_heat - inside_temp
+    # avoid divide by 0
+    if denom == 0:
+        # return 0, this will be prune later
+        return 0
+    else:
+        return -(delta_t * (inside_temp - outside_temp)) / denom
 
 
 def is_stable(delta_t, cap, res):
@@ -43,11 +49,20 @@ def is_stable(delta_t, cap, res):
     return delta_t < (cap * res)
 
 
-def infer_vars(room):
+def clean_data(data):
+    """
+    Removes all values <= 0 from data
+    :param data: a list of tau values
+    :return: a new list with values > 0
+    """
+    return [x for x in data if x > 0]
+
+
+def infer_tau(room):
     """
     Uses data from the rooms to infer tau and epsilon for the whole data set
     @param room: a room object containing temps and timestamps
-    @return the tuple containing the final tau and epsilon for the data set
+    @return the tau value for the room
     """
     # dt is determined to be 10 from data
     # we could calculate this from the data, but there are some weird timestamps that throw off calculations.
@@ -57,35 +72,22 @@ def infer_vars(room):
     for i in range(len(room.temps) - 1):
         all_tau.append(get_tau(
             dt,
-            room.temps[i + 1][1] - room.temps[i][1],
+            room.temps[i + 1][1],
             room.temps[i][1],
             room.temps[i][2]
         ))
+
+    # remove all values <= 0, since they are not useful
+    all_tau = clean_data(all_tau)
 
     # check to make sure the node actually had readings
     if all_tau:
         # calculate the mean tau
         tau = sum(all_tau) / len(all_tau)
         # epsilon is the difference between dt and tau. add .5 to consider stability condition
-        return tau, abs(dt - tau) + .5
+        return tau
     else:
         return None
 
-def all_tau(room):
-    dt = 10
-    # list to store all calculated capacitance for a particular room
-    all_tau = []
-    time = []
-    dates = []
 
-    for i in range(len(room.temps) - 1):
-        all_tau.append(get_tau(
-            dt,
-            room.temps[i + 1][1] - room.temps[i][1],
-            room.temps[i][1],
-            room.temps[i][2]
-        ))
-        dates.append(room.temps[i][0])
-
-    return  [all_tau,dates]
 
