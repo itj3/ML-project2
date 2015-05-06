@@ -4,6 +4,7 @@
 
 from matplotlib import pyplot as p
 from matplotlib import patches
+from model import get_b_tau
 
 
 def print_tau(room_num, tau):
@@ -14,8 +15,20 @@ def print_tau(room_num, tau):
     :return:
     """
     print '-----------------------'
-    print 'Node: %s,| Tau: %d' % (room_num, tau)
+    if int(room_num) < 10:
+        print 'Node: 0%s, | Tau: %d' % (room_num, tau)
+    else:
+        print 'Node: %s, | Tau: %d' % (room_num, tau)
     print '-----------------------'
+
+def print_b_tau(rooms):
+    """
+    Formats and prints the tau of the building
+    :param rooms: list of room objects
+    :return:
+    """
+    print '-----------------------'
+    print 'Building  | Tau: %d' % (get_b_tau(rooms))
 
 
 def plot_model(room_num, time, calculated, actual):
