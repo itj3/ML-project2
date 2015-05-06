@@ -89,5 +89,33 @@ def infer_tau(room):
     else:
         return None
 
+def get_b_tau(room_nums):
+    """
+    evaluates tau for the entire building
+    @param room_nums: a list of room objects containing temps and timestamps
+    @return the tau value for the building
+    """
+    return_list = []
+    for r in room_nums:
+        # get tau for each room type
+        # and place in in list with node number
+        temp = infer_tau(r)
+        return_list.append([r.room_num,temp])
+    total = 0
+    # weight each room type by how many rooms there are
+    # in math building of that type
+    for x in return_list:
+        if x[0] == '7':
+            total = total + x[1]*28
+        if x[0] == '9':
+            total = total + x[1]*9
+        if x[0] == '10':
+            total = total + x[1]*10
+        if x[0] == '19':
+            total = total + x[1]*9
+    # divide by the total number of rooms
+    return total/56
+    
+
 
 
