@@ -7,7 +7,7 @@ import file_reader
 import room
 from model import *
 
-temp_data = file_reader.read('night.csv')
+temp_data = file_reader.read('new_temps.csv')
 rooms = []
 
 for x in temp_data:

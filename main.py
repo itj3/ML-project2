@@ -2,7 +2,7 @@ import file_reader
 import room
 from model import infer_tau, update_heat
 from output import plot_model, print_tau, print_b_tau
-
+import datetime
 
 def main():
     # load the data slice we want to use for determining tau
@@ -33,9 +33,12 @@ def main():
         # any given time value
         t = 0
         tau = infer_tau(r)
-
+        start =  r.temps[0][0]
+        dateTime = []
         for temp in r.temps:
             t += 10
+            end = start+datetime.timedelta(0,t)
+            dateTime.append(end)
             time_steps.append(t)
             heat = update_heat(dt, tau, temp[1], temp[2])
             calculated_heat_values.append(heat)
@@ -43,7 +46,7 @@ def main():
 
         print_tau(r.room_num, tau)
         # IF MATPLOTLIB NOT INSTALLED, COMMENT OUT line below
-        # plot_model(r.room_num, time_steps, calculated_heat_values, actual_heat_values)
+        plot_model(r.room_num,dateTime, calculated_heat_values, actual_heat_values, start, end)
     # print tau for the building
     print_b_tau(building_rooms) 
 
