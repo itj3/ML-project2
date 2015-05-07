@@ -114,7 +114,7 @@ def get_b_tau(room_nums):
         if x[0] == '19':
             total = total + x[1]*9
     # divide by the total number of rooms
-    return total/56
+    return total
     
 
 
